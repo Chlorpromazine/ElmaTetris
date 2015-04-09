@@ -73,3 +73,9 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+Debug/Elma tetris.ilk
+Debug/Elma tetris.ilk
+Debug/Elma tetris.pdb
+Elma tetris.opensdf
+*.pdb
+*.ilk

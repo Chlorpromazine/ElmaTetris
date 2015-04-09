@@ -39,7 +39,7 @@ void objects::changeObject(int curObj)
 	}
 }
 
-void objects::objectActive(int curObj)
+void objects::objectActive(int curObj,bool active)
 {
 	if (objectAddr.size() > curObj)
 	{
@@ -48,7 +48,7 @@ void objects::objectActive(int curObj)
 		BYTE type = *(BYTE*)Dest;
 
 		//1 active, 0 non active
-		type = !type;
+		type = active;
 
 		BYTE Buff[1] = { type };
 		MemPatch(Dest, Buff, 1);

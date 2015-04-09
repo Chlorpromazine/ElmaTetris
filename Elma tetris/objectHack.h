@@ -30,7 +30,7 @@ private:
 
 public:
 	void changeObject(int curObj);
-	void objectActive(int curObj);
+	void objectActive(int curObj, bool active);
 	void nextObject();
 	void moveObject(int);
 	pos getLocation();
@@ -39,6 +39,8 @@ public:
 	void newLocation(pos);
 
 	bool newLev();
+
+	
 };
 
 #endif

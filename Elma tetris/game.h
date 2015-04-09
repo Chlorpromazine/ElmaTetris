@@ -1,3 +1,22 @@
+/*****************************************************************************************
+/* File: Game.h
+/* Desc: General class for the game
+/*
+/* gametuto.com - Javier López López (javilop.com)
+/*
+/*****************************************************************************************
+/*
+/* Creative Commons - Attribution 3.0 Unported
+/* You are free:
+/*	to Share — to copy, distribute and transmit the work
+/*	to Remix — to adapt the work
+/*
+/* Under the following conditions:
+/* Attribution. You must attribute the work in the manner specified by the author or licensor
+/* (but not in any way that suggests that they endorse you or your use of the work).
+/*
+/*****************************************************************************************/
+
 #ifndef _GAME_
 #define _GAME_
 
@@ -5,17 +24,16 @@
 
 #include "Board.h"
 #include "Piece.h"
+#include "IO.h"
 #include <time.h>
-#include <iostream>
-using namespace std;
 
 // ------ Defines -----
 
-#define WAIT_TIME 700           // Number of milliseconds that the piece remains before going 1 block down */
+#define WAIT_TIME 700			// Number of milliseconds that the piece remains before going 1 block down */ 
 
 
 // --------------------------------------------------------------------------------
-//                                   Game
+//									 Game
 // --------------------------------------------------------------------------------
 
 class Game
@@ -27,14 +45,14 @@ public:
 	void DrawScene();
 	void CreateNewPiece();
 
-	int mPosX, mPosY;               // Position of the piece that is falling down
-	int mPiece, mRotation;          // Kind and rotation the piece that is falling down
+	int mPosX, mPosY;				// Position of the piece that is falling down
+	int mPiece, mRotation;			// Kind and rotation the piece that is falling down
 
 private:
 
-	int mScreenHeight;              // Screen height in pixels
-	int mNextPosX, mNextPosY;       // Position of the next piece
-	int mNextPiece, mNextRotation;  // Kind and rotation of the next piece
+	int mScreenHeight;				// Screen height in pixels
+	int mNextPosX, mNextPosY;		// Position of the next piece
+	int mNextPiece, mNextRotation;	// Kind and rotation of the next piece
 
 	Board *mBoard;
 	Pieces *mPieces;
@@ -43,6 +61,7 @@ private:
 	int GetRand(int pA, int pB);
 	void InitGame();
 	void DrawPiece(int pX, int pY, int pPiece, int pRotation);
+	void DrawPiece2(int pX, int pY, int pPiece, int pRotation);
 	void DrawBoard();
 };
 
