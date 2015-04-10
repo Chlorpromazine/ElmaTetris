@@ -22,6 +22,8 @@ bool enteredLev = 0;
 bool inLev = 0;
 bool newGame = 0;
 
+long delayDown = 0;
+
 bool checkExit = 1;
 
 clock_t lastTime = clock();
@@ -43,7 +45,7 @@ void hotKeys(Game &mGame,Board &mBoard)
 	keyDown(VK_UP);
 	if (prevKeyStates[VK_UP] != currKeyStates[VK_UP])
 	{
-		if (currKeyStates[0x5A])
+		if (currKeyStates[VK_UP])
 			if (mBoard.IsPossibleMovement(mGame.mPosX, mGame.mPosY, mGame.mPiece, (mGame.mRotation + 1) % 4))
 				mGame.mRotation = (mGame.mRotation + 1) % 4;
 
@@ -51,14 +53,14 @@ void hotKeys(Game &mGame,Board &mBoard)
 	}prevKeyStates[VK_UP] = currKeyStates[VK_UP];
 
 	//down
-	keyDown(VK_DOWN);
-	if (prevKeyStates[VK_DOWN] != currKeyStates[VK_DOWN])
+	if (GetAsyncKeyState(VK_DOWN) < 0 && delayDown > 100)
 	{
-		if (currKeyStates[VK_DOWN])
-			if (mBoard.IsPossibleMovement(mGame.mPosX, mGame.mPosY + 1, mGame.mPiece, mGame.mRotation))
-				mGame.mPosY++;
 
-	}prevKeyStates[VK_DOWN] = currKeyStates[VK_DOWN];
+		if (mBoard.IsPossibleMovement(mGame.mPosX, mGame.mPosY + 1, mGame.mPiece, mGame.mRotation))
+			mGame.mPosY++;
+		delayDown = 0;
+	}
+	
 
 	//left
 	keyDown(VK_LEFT);
@@ -67,6 +69,8 @@ void hotKeys(Game &mGame,Board &mBoard)
 		if (currKeyStates[VK_LEFT])
 			if (mBoard.IsPossibleMovement(mGame.mPosX + 1, mGame.mPosY, mGame.mPiece, mGame.mRotation))
 				mGame.mPosX++;
+			
+			
 
 	}prevKeyStates[VK_LEFT] = currKeyStates[VK_LEFT];
 
@@ -169,9 +173,6 @@ DWORD WINAPI mainLoop(void*)
 
 				}
 
-
-
-				cout << "ok" << endl;
 				Pieces mPieces;
 
 				// Board
@@ -186,6 +187,7 @@ DWORD WINAPI mainLoop(void*)
 				//start tetris
 				while (inLev)
 				{
+					delayDown++;
 					timer = clock();
 					hotKeys(mGame,mBoard);
 					
@@ -194,11 +196,10 @@ DWORD WINAPI mainLoop(void*)
 						
 
 						unsigned long mTime2 = clock();
-
+						mBoard.clearApples();
+						mGame.DrawScene();
 						if ((mTime2 - mTime1) > WAIT_TIME)
 						{
-							mBoard.clearApples();
-							mGame.DrawScene();
 							
 							if (mBoard.IsPossibleMovement(mGame.mPosX, mGame.mPosY + 1, mGame.mPiece, mGame.mRotation))
 							{
@@ -226,8 +227,9 @@ DWORD WINAPI mainLoop(void*)
 							mTime1 = clock();
 						}
 
-
+						
 						lastTime = timer;
+						
 					}
 					if (currentScreen != 1 && currentScreen != 3) 
 					{
@@ -235,6 +237,7 @@ DWORD WINAPI mainLoop(void*)
 						exitLev(1);
 						checkExit = 1;
 					}
+					Sleep(1);
 				}
 			}
 			break;

@@ -67,7 +67,6 @@ Parameters:
 */
 void Board::StorePiece(int pX, int pY, int pPiece, int pRotation)
 {
-	cout << "ok3" << endl;
 	// Store each block of the piece into the board
 	for (int i1 = pX, i2 = 0; i1 < pX + PIECE_BLOCKS; i1++, i2++)
 	{
@@ -77,8 +76,7 @@ void Board::StorePiece(int pX, int pY, int pPiece, int pRotation)
 			if (mPieces->GetBlockType(pPiece, pRotation, j2, i2) != 0)
 			{
 				mBoard[i1][j1] = POS_FILLED;
-				objects::obj.objectActive(190-(j1 * 10) + i1,1);
-				cout << "ok2" << endl;
+				objects::obj.objectActive(200-(j1 * 10) - i1-1,1);
 			}
 		}
 	}
@@ -245,10 +243,10 @@ void Board::clearApples()
 		{
 			if (mBoard[j][i] == 0)
 			{
-				objects::obj.objectActive(200 - (i * 10 + j), 0);
+				objects::obj.objectActive(200 - (i * 10 + j+1), 0);
 				
 			}
-			
+			else objects::obj.objectActive(200 - (i * 10 + j+1), 1);
 		}
 	for (int i = 200; i < 250; i++)
 		objects::obj.objectActive(i, 0);

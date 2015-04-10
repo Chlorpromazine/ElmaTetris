@@ -119,7 +119,7 @@ void Game::DrawPiece(int pX, int pY, int pPiece, int pRotation)
 		for (int j = 0; j < PIECE_BLOCKS; j++)
 		{
 			if (mPieces->GetBlockType(pPiece, pRotation, j, i) != 0)
-				objects::obj.objectActive(200 - (((pY+j) * 10) + (pX+i)),1);
+				objects::obj.objectActive(200 - (((pY+j) * 10) + (pX+i+1)),1);
 			
 		}
 	}
@@ -133,7 +133,7 @@ void Game::DrawPiece2(int pX, int pY, int pPiece, int pRotation)
 		for (int j = 0; j < PIECE_BLOCKS; j++)
 		{
 			if (mPieces->GetBlockType(pPiece, pRotation, j, i) != 0)
-				objects::obj.objectActive(200+((i-1)*3+(j-1)),1);
+				objects::obj.objectActive(200+((i+1)*3+(j-1)),1);
 
 		}
 	}
