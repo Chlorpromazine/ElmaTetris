@@ -27,6 +27,94 @@ bool checkExit = 1;
 clock_t lastTime = clock();
 clock_t timer;
 
+static vector<bool> currKeyStates;
+static vector<bool> prevKeyStates;
+
+void keyDown(int key1)
+{
+	if (GetAsyncKeyState(key1) < 0)
+		currKeyStates[key1] = 1;
+	else currKeyStates[key1] = 0;
+}
+void hotKeys(Game &mGame,Board &mBoard)
+{
+
+		//up
+	keyDown(VK_UP);
+	if (prevKeyStates[VK_UP] != currKeyStates[VK_UP])
+	{
+		if (currKeyStates[0x5A])
+			if (mBoard.IsPossibleMovement(mGame.mPosX, mGame.mPosY, mGame.mPiece, (mGame.mRotation + 1) % 4))
+				mGame.mRotation = (mGame.mRotation + 1) % 4;
+
+
+	}prevKeyStates[VK_UP] = currKeyStates[VK_UP];
+
+	//down
+	keyDown(VK_DOWN);
+	if (prevKeyStates[VK_DOWN] != currKeyStates[VK_DOWN])
+	{
+		if (currKeyStates[VK_DOWN])
+			if (mBoard.IsPossibleMovement(mGame.mPosX, mGame.mPosY + 1, mGame.mPiece, mGame.mRotation))
+				mGame.mPosY++;
+
+	}prevKeyStates[VK_DOWN] = currKeyStates[VK_DOWN];
+
+	//left
+	keyDown(VK_LEFT);
+	if (prevKeyStates[VK_LEFT] != currKeyStates[VK_LEFT])
+	{
+		if (currKeyStates[VK_LEFT])
+			if (mBoard.IsPossibleMovement(mGame.mPosX + 1, mGame.mPosY, mGame.mPiece, mGame.mRotation))
+				mGame.mPosX++;
+
+	}prevKeyStates[VK_LEFT] = currKeyStates[VK_LEFT];
+
+	//right
+	keyDown(VK_RIGHT);
+	if (prevKeyStates[VK_RIGHT] != currKeyStates[VK_RIGHT])
+	{
+		if (currKeyStates[VK_RIGHT])
+			if (mBoard.IsPossibleMovement(mGame.mPosX - 1, mGame.mPosY, mGame.mPiece, mGame.mRotation))
+				mGame.mPosX--;
+			
+		
+
+	}prevKeyStates[VK_RIGHT] = currKeyStates[VK_RIGHT];
+
+	//c
+	keyDown(0x43);
+	if (prevKeyStates[0x43] != currKeyStates[0x43])
+	{
+		if (currKeyStates[0x43])
+		{
+			while (mBoard.IsPossibleMovement(mGame.mPosX, mGame.mPosY, mGame.mPiece, mGame.mRotation)) { mGame.mPosY++; }
+
+			mBoard.StorePiece(mGame.mPosX, mGame.mPosY - 1, mGame.mPiece, mGame.mRotation);
+
+			mBoard.DeletePossibleLines();
+
+			if (mBoard.IsGameOver())
+			{
+				
+			}
+
+			mGame.CreateNewPiece();
+		}
+
+
+	}prevKeyStates[0x43] = currKeyStates[0x43];
+
+
+
+	//remove dll from elma (DEL)
+	if (GetAsyncKeyState(VK_DELETE))
+	{
+		run = 1;
+	}
+
+}
+
 void exitLev(int exitBool)
 {
 	if (!exitBool)
@@ -44,7 +132,12 @@ void exitLev(int exitBool)
 
 DWORD WINAPI mainLoop(void*)
 {
-	
+	for (int i = 0; i < 255; i++)
+	{
+		currKeyStates.push_back(0);
+		prevKeyStates.push_back(0);
+	}
+
 	while (run == 2){
 
 		//0 = menu, 1 = in normal level, replay = 2, 3 = editor level
@@ -94,12 +187,10 @@ DWORD WINAPI mainLoop(void*)
 				while (inLev)
 				{
 					timer = clock();
-
+					hotKeys(mGame,mBoard);
 					
 					if (timer - lastTime > 16.6f)  //60fps
 					{
-						//tetris::tet.mainTetris();
-						
 						
 
 						unsigned long mTime2 = clock();
@@ -108,7 +199,7 @@ DWORD WINAPI mainLoop(void*)
 						{
 							mBoard.clearApples();
 							mGame.DrawScene();
-							cout << "ok4" << endl;
+							
 							if (mBoard.IsPossibleMovement(mGame.mPosX, mGame.mPosY + 1, mGame.mPiece, mGame.mRotation))
 							{
 								mGame.mPosY++;
@@ -128,10 +219,10 @@ DWORD WINAPI mainLoop(void*)
 									
 									
 								}
-
+								mBoard.clearApples();
 								mGame.CreateNewPiece();
 							}
-
+							
 							mTime1 = clock();
 						}
 

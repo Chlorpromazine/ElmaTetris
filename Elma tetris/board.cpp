@@ -244,7 +244,11 @@ void Board::clearApples()
 		for (int j = 0; j < 10; j++)
 		{
 			if (mBoard[j][i] == 0)
-				objects::obj.objectActive(200-(i*10 + j), 0);
+			{
+				objects::obj.objectActive(200 - (i * 10 + j), 0);
+				
+			}
+			
 		}
 	for (int i = 200; i < 250; i++)
 		objects::obj.objectActive(i, 0);
