@@ -23,7 +23,6 @@
 // ------ Includes -----
 
 #include "Piece.h"
-#include "tetris.h"
 
 // ------ Defines -----
 

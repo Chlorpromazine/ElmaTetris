@@ -85,7 +85,6 @@
     <ClCompile Include="mem.cpp" />
     <ClCompile Include="objectHack.cpp" />
     <ClCompile Include="piece.cpp" />
-    <ClCompile Include="tetris.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h" />
@@ -95,7 +94,6 @@
     <ClInclude Include="mem.h" />
     <ClInclude Include="objectHack.h" />
     <ClInclude Include="Piece.h" />
-    <ClInclude Include="tetris.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

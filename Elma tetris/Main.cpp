@@ -8,7 +8,6 @@
 
 //for elma
 #include "define.h"
-#include "tetris.h"
 #include "objectHack.h"
 #include "mem.h"
 
@@ -38,6 +37,8 @@ void keyDown(int key1)
 		currKeyStates[key1] = 1;
 	else currKeyStates[key1] = 0;
 }
+void exitLev(int exitBool);
+
 void hotKeys(Game &mGame,Board &mBoard)
 {
 
@@ -100,7 +101,9 @@ void hotKeys(Game &mGame,Board &mBoard)
 
 			if (mBoard.IsGameOver())
 			{
-				
+				exitLev(0);
+				checkExit = 0;
+				cout << "game over" << endl;
 			}
 
 			mGame.CreateNewPiece();
@@ -194,7 +197,6 @@ DWORD WINAPI mainLoop(void*)
 					if (timer - lastTime > 16.6f)  //60fps
 					{
 						
-
 						unsigned long mTime2 = clock();
 						mBoard.clearApples();
 						mGame.DrawScene();
@@ -220,7 +222,7 @@ DWORD WINAPI mainLoop(void*)
 									
 									
 								}
-								mBoard.clearApples();
+								
 								mGame.CreateNewPiece();
 							}
 							
