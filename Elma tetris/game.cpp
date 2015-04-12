@@ -135,25 +135,13 @@ void Game::DrawPiece2(int pX, int pY, int pPiece, int pRotation)
 		for (int j = 0; j < PIECE_BLOCKS; j++)
 		{
 			if (mPieces->GetBlockType(pPiece, pRotation, j, i) != 0)
-				objects::obj.objectActive(200+((i)*5+(j)),1);
+				objects::obj.objectActive(225-((i)*5+(j+1)),1);
 
 		}
 	}
 
 }
 
-
-/*
-======================================
-Draw board
-
-Draw the two lines that delimit the board
-======================================
-*/
-void Game::DrawBoard()
-{
-	
-}
 
 
 /*
@@ -165,7 +153,7 @@ Draw all the objects of the scene
 */
 void Game::DrawScene()
 {
-	DrawBoard();													// Draw the delimitation lines and blocks stored in the board
+													// Draw the delimitation lines and blocks stored in the board
 	DrawPiece(mPosX, mPosY, mPiece, mRotation);					// Draw the playing piece
 	DrawPiece2(0, 0, mNextPiece, mNextRotation);	// Draw the next piece
 }

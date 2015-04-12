@@ -1,3 +1,6 @@
+//Elma tetris v1.0 by Cold
+//Please report any bugs in the code
+
 #include <Windows.h>
 #include <iostream>
 #include <string>
@@ -15,6 +18,8 @@
 #include "game.h"
 
 using namespace std;
+
+//todo: use classes
 int run = 2;
 int checkLev = 0;
 bool enteredLev = 0;
@@ -39,10 +44,11 @@ void keyDown(int key1)
 }
 void exitLev(int exitBool);
 
+//detects which keys you pressed.
+//GetAsyncKeyState will not work properly for tetris since it will check thousands of times a second if pressed, we only want to activate once per press.
 void hotKeys(Game &mGame,Board &mBoard)
 {
-
-		//up
+	//up (rotate piece)
 	keyDown(VK_UP);
 	if (prevKeyStates[VK_UP] != currKeyStates[VK_UP])
 	{
@@ -53,7 +59,7 @@ void hotKeys(Game &mGame,Board &mBoard)
 
 	}prevKeyStates[VK_UP] = currKeyStates[VK_UP];
 
-	//down
+	//down (make the piece go down once square each time)
 	if (GetAsyncKeyState(VK_DOWN) < 0 && delayDown > 100)
 	{
 
@@ -63,7 +69,7 @@ void hotKeys(Game &mGame,Board &mBoard)
 	}
 	
 
-	//left
+	//move left
 	keyDown(VK_LEFT);
 	if (prevKeyStates[VK_LEFT] != currKeyStates[VK_LEFT])
 	{
@@ -75,7 +81,7 @@ void hotKeys(Game &mGame,Board &mBoard)
 
 	}prevKeyStates[VK_LEFT] = currKeyStates[VK_LEFT];
 
-	//right
+	//move right
 	keyDown(VK_RIGHT);
 	if (prevKeyStates[VK_RIGHT] != currKeyStates[VK_RIGHT])
 	{
@@ -87,7 +93,7 @@ void hotKeys(Game &mGame,Board &mBoard)
 
 	}prevKeyStates[VK_RIGHT] = currKeyStates[VK_RIGHT];
 
-	//c
+	//c (hard drop the piece down, check collision/etc)
 	keyDown(0x43);
 	if (prevKeyStates[0x43] != currKeyStates[0x43])
 	{
@@ -112,9 +118,7 @@ void hotKeys(Game &mGame,Board &mBoard)
 
 	}prevKeyStates[0x43] = currKeyStates[0x43];
 
-
-
-	//remove dll from elma (DEL)
+	//remove dll from elma (DEL) will not remove the console although will stop it from displaying stuff
 	if (GetAsyncKeyState(VK_DELETE))
 	{
 		run = 1;
@@ -122,6 +126,8 @@ void hotKeys(Game &mGame,Board &mBoard)
 
 }
 
+//function which force exits any level and places you back to the play again menu
+//removing the jump assumes you hit a killer or a wall
 void exitLev(int exitBool)
 {
 	if (!exitBool)
@@ -137,6 +143,7 @@ void exitLev(int exitBool)
 	exitBool = !exitBool;
 }
 
+//this function will be injected into elma as a thread
 DWORD WINAPI mainLoop(void*)
 {
 	for (int i = 0; i < 255; i++)
@@ -154,16 +161,15 @@ DWORD WINAPI mainLoop(void*)
 			//reset if exited level.
 			enteredLev = 1;
 			inLev = 0;
-			//objects::obj.reload = 1;
 			break;
 		case 1:
 		case 3:
 		{
-			if (enteredLev){
+			if (enteredLev){ //will only do this once each time you enter any level
 				//prepare objects and verification of correct level
 				if (inLev == 0)
 				{
-					if (!memcmp(comparedLev, (char*)0x00485674, 10))
+					if (!memcmp(comparedLev, (char*)0x00485674, 10)) //check if correct level name (tetris.lev)
 					{
 						cout << "Entered correct level" << endl;
 						if (objects::obj.reload) objects::obj.clearVals();
@@ -176,6 +182,7 @@ DWORD WINAPI mainLoop(void*)
 
 				}
 
+				//initialize tetris
 				Pieces mPieces;
 
 				// Board
@@ -187,22 +194,22 @@ DWORD WINAPI mainLoop(void*)
 				newGame = 0;
 
 				long mTime1 = clock();
-				//start tetris
-				while (inLev)
+				//start tetris game
+				while (inLev) //if in correct level (tetris.lev)
 				{
-					delayDown++;
+					delayDown++; //keypress down arrow
 					timer = clock();
 					hotKeys(mGame,mBoard);
 					
-					if (timer - lastTime > 16.6f)  //60fps
+					if (timer - lastTime > 16.6f)  //60fps (change to fix flicker??)
 					{
-						
 						unsigned long mTime2 = clock();
 						mBoard.clearApples();
 						mGame.DrawScene();
+						//tetris functions by gametuto.com - Javier López López (javilop.com)
+						//modified to use apples instead of blocks
 						if ((mTime2 - mTime1) > WAIT_TIME)
 						{
-							
 							if (mBoard.IsPossibleMovement(mGame.mPosX, mGame.mPosY + 1, mGame.mPiece, mGame.mRotation))
 							{
 								mGame.mPosY++;
@@ -258,8 +265,8 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserve
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
-		RedirectIOToConsole();
-		JumpPatch((BYTE*)0x00408DEF, (BYTE*)&objInject, 1);
+		RedirectIOToConsole(); //debug
+		JumpPatch((BYTE*)0x00408DEF, (BYTE*)&objInject, 1); //inject function in elma to find the addresses for the objects
 		run = 2;
 		CreateThread(NULL, 0, mainLoop, NULL, 0L, NULL);
 		break;

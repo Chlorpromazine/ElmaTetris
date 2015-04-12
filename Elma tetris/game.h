@@ -62,7 +62,7 @@ private:
 	void InitGame();
 	void DrawPiece(int pX, int pY, int pPiece, int pRotation);
 	void DrawPiece2(int pX, int pY, int pPiece, int pRotation);
-	void DrawBoard();
+	
 };
 
 #endif // _GAME_

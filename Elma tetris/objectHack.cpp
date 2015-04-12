@@ -19,9 +19,9 @@ vector<int> objectAddr;
 vector<int> tempObjAddr;
 int tmpAddr;
 
+//unused
 void objects::changeObject(int curObj)
 {
-
 	if (objectAddr.size() > curObj)
 	{
 		//read current object type;
@@ -39,6 +39,7 @@ void objects::changeObject(int curObj)
 	}
 }
 
+//activates the object (show/hide), only works for apples OR makes the object's collision go away (killers/flowers) but the image is still there.
 void objects::objectActive(int curObj,bool active)
 {
 	if (objectAddr.size() > curObj)
@@ -57,43 +58,42 @@ void objects::objectActive(int curObj,bool active)
 }
 
 
-//function which takes the addresses of the dynamically stored objects 
+
 int addr_00408DFA = 0x00408DFA;
 int correctLev;
-
-
+//function which takes the addresses of the dynamically stored objects  (the addresses vary each level)
 void __declspec(naked) objInject()
 {
-
-	__asm{pusha}
+	__asm{pusha} //save flags/registries
 
 	correctLev = memcmp(comparedLev, (char*)0x00485674, 10);
 	
 	__asm{popa}
 
+	//save the address of the object in tmpAddr, other code is from elma
+	//elma runs this 1 time for each object
 	__asm{
 			
 		fld qword ptr[esi + 8]
 		fchs
-		mov tmpAddr, esi
+		mov tmpAddr, esi 
 		mov[esi + 0x10], eax
 		fsub qword ptr[edi + 0x20]
 
 	}
 		
-	if (!correctLev)
+	if (!correctLev) //check if you're in tetris.lev
 		tempObjAddr.push_back(tmpAddr);
-			
-		
-	__asm{
+	
+	__asm{ //jmp back to elma
 		jmp addr_00408DFA
 	}
 	
 }
 
+//unused
 void objects::nextObject()
 {
-
 	if (objectAddr.size())
 	{
 		//last object is always null, don't know what it is so I'm just removing it.
@@ -127,6 +127,7 @@ void objects::nextObject()
 	}
 }
 
+//unused
 void objects::moveObject(int dir)
 {
 	if (objectAddr.size())
@@ -134,7 +135,7 @@ void objects::moveObject(int dir)
 		pos position = getLocation();
 
 		//movement
-		if (dir == 0) position.y += 1;
+		if (dir == 0)	   position.y += 1;
 		else if (dir == 1) position.y -= 1;
 		else if (dir == 2) position.x -= 1;
 		else               position.x += 1;
@@ -143,7 +144,7 @@ void objects::moveObject(int dir)
 	}
 }
 
-
+//unused
 objects::pos objects::getLocation()
 {
 	int data;
@@ -157,6 +158,7 @@ objects::pos objects::getLocation()
 	return position;
 }
 
+//unused
 void objects::newLocation(pos newPos)
 {
 	//copy object location x
@@ -169,11 +171,10 @@ void objects::newLocation(pos newPos)
 
 }
 
+//don't really need this, but I haven't find a simple way around it.
 void objects::clearVals()
 {
-	
 		objectAddr = tempObjAddr;
-		cout << objectAddr.size() << endl;
 		tempObjAddr.clear();
 		reload = 0;
 }
