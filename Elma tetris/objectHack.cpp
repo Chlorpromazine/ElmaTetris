@@ -58,7 +58,6 @@ void objects::objectActive(int curObj,bool active)
 }
 
 
-
 int addr_00408DFA = 0x00408DFA;
 int correctLev;
 //function which takes the addresses of the dynamically stored objects  (the addresses vary each level)

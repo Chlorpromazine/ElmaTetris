@@ -140,12 +140,13 @@ void exitLev(int exitBool)
 	{
 		JumpPatch((BYTE*)0x0041F63B, (BYTE*)0x0041F1D4, 0);
 	}
-	exitBool = !exitBool;
 }
 
 //this function will be injected into elma as a thread
 DWORD WINAPI mainLoop(void*)
 {
+	cout << "DLL injected successfully" << endl;
+
 	for (int i = 0; i < 255; i++)
 	{
 		currKeyStates.push_back(0);
